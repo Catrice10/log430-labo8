@@ -8,7 +8,7 @@
   "endpoints": [
     {
       "endpoint": "/payments-api/payments",
-      "method": "POST", 
+      "method": "POST",
       "backend": [
         {
           "url_pattern": "/payments",

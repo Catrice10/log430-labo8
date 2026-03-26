@@ -16,6 +16,7 @@ from stocks.handlers.stock_decrease_failed_handler import StockDecreaseFailedHan
 from stocks.handlers.stock_increased_handler import StockIncreasedHandler
 from payments.handlers.payment_created_handler import PaymentCreatedHandler
 from payments.handlers.payment_creation_failed_handler import PaymentCreationFailedHandler
+from payments.outbox_processor import OutboxProcessor
 from orders.queries.order_event_consumer import OrderEventConsumer
 from stocks.schemas.query import Query
 from flask import Flask, request, jsonify
@@ -25,6 +26,11 @@ from stocks.controllers.product_controller import create_product, remove_product
 from stocks.controllers.stock_controller import get_stock, populate_redis_on_startup, set_stock, get_stock_overview
 
 app = Flask(__name__)
+
+is_outbox_processor_running = False
+if not is_outbox_processor_running:
+    OutboxProcessor().run()
+    is_outbox_processor_running = True
 
 # Auto-populate Redis 5s after API startup (to give enough time for the DB to start up as well)
 thread = threading.Timer(10.0, populate_redis_on_startup)
